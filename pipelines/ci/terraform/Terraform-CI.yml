@@ -35,7 +35,7 @@ steps:
         Write-Host "##vso[task.setvariable variable=key;]$key"
       powerShellErrorActionPreference: continue
       
-  - task: TerraformInstaller@1
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
     displayName: Install Terraform latest
     inputs:
       workingDirectory: 'devops101/terraform'
