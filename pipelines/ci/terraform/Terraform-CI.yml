@@ -4,6 +4,12 @@ steps:
   - checkout: self
     clean: true
     fetchTags: false
+  - task: replacetokens@5
+    displayName: Replace tokens in **/*.yml
+    inputs:
+      rootDirectory: pipelines/ci/terraform
+      targetFiles: '**/*.yml'
+      tokenPattern: rm
   - task: PowerShell@2
     displayName: PowerShell Script
     inputs:
