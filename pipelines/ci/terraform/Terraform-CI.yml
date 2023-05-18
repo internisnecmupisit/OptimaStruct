@@ -1,0 +1,84 @@
+# Variable 'rgterraform' was defined in the Variables tab
+# Variable 'saname' was defined in the Variables tab
+steps:
+  - checkout: self
+    clean: true
+    fetchTags: false
+  - task: PowerShell@2
+    displayName: PowerShell Script
+    inputs:
+      targetType: inline
+      script: >
+        $rgterraform = 
+        $token = "I'm the god"
+
+        Write-Host $token
+
+        Write-Host "##vso[task.setvariable variable=token]$token"
+  - task: replacetokens@5
+    displayName: Replace tokens in **/*.txt
+    inputs:
+      rootDirectory: pipelines/ci/terraform
+      targetFiles: '**/*.txt'
+      tokenPattern: rm
+  - task: AzureCLI@2
+    displayName: 'Azure CLI '
+    inputs:
+      azureSubscription: 'sc-terraform'
+      scriptType: ps
+      scriptLocation: inlineScript
+      inlineScript: >-
+        az group create --name __rgterraform__ --location southeastasia
+
+        az storage account create --name __saname__ --resource-group __rgterraform__ --location southeastasia --sku Standard_LRS
+
+
+        az storage container create --name terraform --account-name __saname__
+
+
+        az storage account keys list -g __rgterraform__ -n __saname__
+
+
+        $key = (az storage account keys list --account-name __saname__ --resource-group __rgterraform__ --query "[0].value" --output tsv)
+
+
+        Write-Host $key
+
+
+        Write-Host "##vso[task.setvariable variable=key;]$key"
+      powerShellErrorActionPreference: continue
+      
+  - task: TerraformInstaller@1
+    displayName: Install Terraform latest
+    inputs:
+      workingDirectory: 'devops101/terraform'
+      terraformVersion: 'latest'
+
+  - task: TerraformTaskV4@4
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/devops101/terraform'
+      backendServiceArm: 'sc-terraform'
+      backendAzureRmResourceGroupName: '__rgterraform__'
+      backendAzureRmStorageAccountName: '__saname__'
+      backendAzureRmContainerName: 'terraform'
+      backendAzureRmKey: 'terraform.tfstate'
+  - task: TerraformTaskV4@4
+    displayName: 'Terraform : plan'
+    inputs:
+      command: plan
+      workingDirectory: devops101/terraform
+      environmentServiceNameAzureRM: 'sc-terraform'
+  - task: TerraformTaskV4@4
+    displayName: 'Terraform : azurerm'
+    continueOnError: True
+    inputs:
+      command: apply
+      workingDirectory: devops101/terraform
+      environmentServiceNameAzureRM: 'sc-terraform'
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Pipeline Artifact
+    inputs:
+      path: devops101/terraform
+      artifactName: terraform

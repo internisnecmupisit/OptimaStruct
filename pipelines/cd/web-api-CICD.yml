@@ -1,0 +1,12 @@
+steps:
+  - checkout: self
+    clean: true
+    fetchTags: false
+  - task: Docker@2
+    displayName: buildAndPush
+    inputs:
+      containerRegistry: 'sc-acr'
+      repository: api
+      Dockerfile: 'manao-devops/devops101/api/Dockerfile'
+      buildContext: 'manao-devops/devops101/api'
+      tags: latest

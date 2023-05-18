@@ -1,0 +1,23 @@
+trigger:
+  branches:
+    include:
+      - feature/intern
+  paths:
+    include:
+      - 'devops101/api/*'
+      - 'devops101/app/*'
+
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: refs/heads/feature/intern
+
+jobs:
+- job: build
+  displayName: 'API and Web App Build'
+  pool:
+      vmImage: 'ubuntu-latest'
+  steps:
+    - template: 'web-api-CICD.yml'
+    - template: 'web-app-CICD.yml'

@@ -1,0 +1,23 @@
+trigger:
+  branches:
+    include:
+      - feature/intern
+  paths:
+    include:
+      - 'devops101/terraform/*'
+
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: refs/heads/feature/intern
+
+jobs:
+  - job: build
+    pool:
+      vmImage: 'windows-latest'
+    displayName: 'build all'
+    workspace:
+      clean: all
+    steps:
+      - template: 'Terraform-CI.yml'

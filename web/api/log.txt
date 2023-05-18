@@ -1,0 +1,13 @@
+Created palindrome_relations table.
+hah is a palindrome.
+Created palindrome_relations table.
+Created palindrome_relations table.
+Created palindrome_relations table.
+Created palindrome_relations table.
+Created palindrome_relations table.
+hah is a palindrome.
+Created palindrome_relations table.
+Created palindrome_relations table.
+abcba is a palindrome.
+abcba is a palindrome.
+abcbau is not a palindrome.

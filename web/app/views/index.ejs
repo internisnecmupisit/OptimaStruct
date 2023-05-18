@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Palindrome Checker</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #333;
+            margin-top: 0;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.5;
+            color: #666;
+        }
+
+        input[type="text"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 2px solid #ccc;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #008CBA;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #00698C;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>OptimaStruct</h1>
+        <form id="palindrome-form">
+            <label for="input-field">Type a word or phrase to check if it's a palindrome:</label>
+            <input type="text" id="input-field" name="input">
+            <button type="submit">Check</button>
+        </form>
+        <p id="result" class="hidden"></p>
+    </div>
+    <div>
+        <p id="output1"></p>
+    </div>
+    <script>
+        const palindromeForm = document.getElementById("palindrome-form");
+        const inputField = document.getElementById("input-field");
+        const result = document.getElementById("result");
+
+        palindromeForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const input = inputField.value;
+            const data = { input: input };
+
+            fetch(`${apiUrl}/checkPalindrome`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    result.innerHTML = data.message;
+                    result.classList.remove("error");
+                    result.classList.remove("success");
+                    if (data.message.includes("is a palindrome")) {
+                        result.classList.add("success");
+                    } else {
+                        result.classList.add("error");
+                    }
+                    result.classList.remove("hidden");
+                })
+                .catch(error => console.log(error));
+        });
+
+        var apiUrl = '<%= apiUrl %>';
+        // Use the apiUrl variable in your client-side JavaScript code
+        // You can access it as a global variable or assign it to a specific element
+        console.log(apiUrl);
+    </script>
+</body>
+
+</html>
