@@ -85,7 +85,17 @@ steps:
       targetFiles: '**/*.yml'
       tokenPattern: rm
   - task: PublishPipelineArtifact@1
-    displayName: Publish Pipeline Artifact
+    displayName: Publish terraform Artifact
     inputs:
       path: terraform
       artifactName: terraform
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Pipeline Artifact
+    inputs:
+      path: pipelines
+      artifactName: pipelines
+  - task: PublishPipelineArtifact@1
+    displayName: Publish web Artifact
+    inputs:
+      path: web
+      artifactName: web
