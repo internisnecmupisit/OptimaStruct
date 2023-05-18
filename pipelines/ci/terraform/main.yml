@@ -1,16 +1,16 @@
 trigger:
   branches:
     include:
-      - feature/intern
+      - main
   paths:
     include:
-      - 'devops101/terraform/*'
+      - 'terraform/*'
 
 resources:
   repositories:
   - repository: self
     type: git
-    ref: refs/heads/feature/intern
+    ref: refs/heads/main
 
 jobs:
   - job: build
