@@ -9,42 +9,29 @@ steps:
     inputs:
       targetType: inline
       script: >
-        $rgterraform = 
-        $token = "I'm the god"
+        $rgterraform = "rg-__projectname__-__environment__"
+        $saterraform = "sa__projectname____environment__"
 
-        Write-Host $token
-
-        Write-Host "##vso[task.setvariable variable=token]$token"
+        Write-Host "##vso[task.setvariable variable=rgterraform]$rgterraform"
+        Write-Host "##vso[task.setvariable variable=saterraform]$saterraform"
   - task: replacetokens@5
-    displayName: Replace tokens in **/*.txt
+    displayName: Replace tokens in **/*.yml
     inputs:
       rootDirectory: pipelines/ci/terraform
-      targetFiles: '**/*.txt'
+      targetFiles: '**/*.yml'
       tokenPattern: rm
   - task: AzureCLI@2
-    displayName: 'Azure CLI '
+    displayName: 'Setup terraform storage account'
     inputs:
       azureSubscription: 'sc-terraform'
       scriptType: ps
       scriptLocation: inlineScript
       inlineScript: >-
-        az group create --name __rgterraform__ --location southeastasia
-
         az storage account create --name __saname__ --resource-group __rgterraform__ --location southeastasia --sku Standard_LRS
-
-
         az storage container create --name terraform --account-name __saname__
-
-
         az storage account keys list -g __rgterraform__ -n __saname__
-
-
         $key = (az storage account keys list --account-name __saname__ --resource-group __rgterraform__ --query "[0].value" --output tsv)
-
-
         Write-Host $key
-
-
         Write-Host "##vso[task.setvariable variable=key;]$key"
       powerShellErrorActionPreference: continue
       
@@ -58,7 +45,7 @@ steps:
     inputs:
       provider: 'azurerm'
       command: 'init'
-      workingDirectory: '$(System.DefaultWorkingDirectory)/devops101/terraform'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
       backendServiceArm: 'sc-terraform'
       backendAzureRmResourceGroupName: '__rgterraform__'
       backendAzureRmStorageAccountName: '__saname__'
@@ -77,8 +64,28 @@ steps:
       command: apply
       workingDirectory: devops101/terraform
       environmentServiceNameAzureRM: 'sc-terraform'
+  - task: AzureCLI@2
+    displayName: 'Get acr variable'
+    inputs:
+      connectedServiceNameARM: 'sc-terraform'
+      scriptType: ps
+      scriptLocation: inlineScript
+      inlineScript: >-
+        $username=$(az acr credential show --name acr__projectname____environment__ --resource-group rg-__projectname__-__environment__ --query "username" --output tsv)
+        $password=$(az acr credential show --name acr__projectname____environment__ --resource-group rg-__projectname__-__environment__ --query "passwords[0].value" --output tsv)
+        $loginserver = $username + ".azurecr.io"
+        Write-Host $username $password $loginserver
+        Write-Host "##vso[task.setvariable variable=username]$username"
+        Write-Host "##vso[task.setvariable variable=password]$password"
+        Write-Host "##vso[task.setvariable variable=loginserver]$loginserver"
+  - task: replacetokens@5
+    displayName: Replace variable to deploy pipeline YML
+    inputs:
+      rootDirectory: pipelines/cd
+      targetFiles: '**/*.yml'
+      tokenPattern: rm
   - task: PublishPipelineArtifact@1
     displayName: Publish Pipeline Artifact
     inputs:
-      path: devops101/terraform
+      path: terraform
       artifactName: terraform
