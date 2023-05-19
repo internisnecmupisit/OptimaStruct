@@ -20,25 +20,14 @@ jobs:
       vmImage: 'ubuntu-latest'
   steps:
     - task: PowerShell@2
-      displayName: 'List Folders and Files'
       inputs:
         targetType: 'inline'
         script: |
-          $rootPath = "$(System.DefaultWorkingDirectory)"  # Replace with the path of the root folder
+          $rootPath = "$(System.DefaultWorkingDirectory)"
 
-          function Get-FolderContents {
-              param([string]$path)
-
-              Get-ChildItem -Path $path -Recurse | ForEach-Object {
-                  $item = $_
-                  $type = $_.PSIsContainer ? "Folder" : "File"
-                  $relativePath = Convert-Path -Relative $_.FullName -ErrorAction SilentlyContinue
-                  Write-Output "${type}: ${relativePath}"
-              }
+          Get-ChildItem -Path $rootPath -Recurse -Directory | ForEach-Object {
+              Write-Host $_.FullName
           }
-
-          Get-FolderContents -path $rootPath
-
     - task: DownloadPipelineArtifact@2
       displayName: Download yml config Artifact
       continueOnError: true
