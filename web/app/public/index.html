@@ -76,7 +76,7 @@
 
 <body>
     <div class="container">
-        <h1>OptimaStruct</h1>
+        <h1>OptimaStruct v.X</h1>
         <form id="palindrome-form">
             <label for="input-field">Type a word or phrase to check if it's a palindrome:</label>
             <input type="text" id="input-field" name="input">
@@ -98,7 +98,7 @@
             const input = inputField.value;
             const data = { input: input };
 
-            fetch("http://localhost/checkPalindrome", {
+            fetch(`http://__webapi__/checkPalindrome`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
@@ -117,11 +117,6 @@
                 })
                 .catch(error => console.log(error));
         });
-
-        var apiUrl = '<%= apiUrl %>';
-        // Use the apiUrl variable in your client-side JavaScript code
-        // You can access it as a global variable or assign it to a specific element
-        console.log(apiUrl);
     </script>
 </body>
 
