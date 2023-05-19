@@ -19,5 +19,20 @@ jobs:
   pool:
       vmImage: 'ubuntu-latest'
   steps:
+    - task: DownloadPipelineArtifact@2
+      displayName: Download yml config Artifact
+      continueOnError: true
+      inputs:
+        source: specific
+        project: 'OptimaStruct'
+        pipeline: 'terraform-iac'
+        preferTriggeringPipeline: true
+        artifact: pipelines
+        path: $(Pipeline.Workspace)/pipelines
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: pipelines'
+      inputs:
+        SourceFolder: '$(Pipeline.Workspace)/pipelines'
+        TargetFolder: pipelines/cd
     - template: 'web-api-CICD.yml'
     - template: 'web-app-CICD.yml'

@@ -1,3 +1,11 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - 'terraform/*'
+
 resources:
   pipelines:
   - pipeline: terraform-setup
