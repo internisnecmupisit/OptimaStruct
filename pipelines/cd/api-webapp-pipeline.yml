@@ -33,6 +33,21 @@ jobs:
       displayName: 'Copy Files to: pipelines'
       inputs:
         SourceFolder: '$(Pipeline.Workspace)/pipelines'
-        TargetFolder: pipelines/cd
+        TargetFolder: pipelines
+    - task: DownloadPipelineArtifact@2
+      displayName: Download web config Artifact
+      continueOnError: true
+      inputs:
+        source: specific
+        project: 'OptimaStruct'
+        pipeline: 'terraform-iac'
+        preferTriggeringPipeline: true
+        artifact: web
+        path: $(Pipeline.Workspace)/web
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: web'
+      inputs:
+        SourceFolder: '$(Pipeline.Workspace)/web'
+        TargetFolder: web
     - template: 'web-api-CICD.yml'
     - template: 'web-app-CICD.yml'
