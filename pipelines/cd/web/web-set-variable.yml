@@ -44,3 +44,29 @@ jobs:
           Write-Host "##vso[task.setvariable variable=password]$password"
 
           Write-Host "##vso[task.setvariable variable=loginserver]$loginserver"
+
+          $webapp = "rg-"+$(projectname)+"-app-"+$(environment)+".azurewebsites.net"
+
+          $webapi = "rg-"+$(projectname)+"-api-"+$(environment)+".azurewebsites.net"
+    - task: replacetokens@5
+      displayName: Replace variable to deploy pipeline YML
+      inputs:
+        rootDirectory: pipelines/cd
+        targetFiles: '**/*.yml'
+        tokenPattern: rm
+    - task: replacetokens@5
+      displayName: Replace variable to website
+      inputs:
+        rootDirectory: web/app
+        targetFiles: '**/.env'
+        tokenPattern: rm
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Pipeline Artifact
+      inputs:
+        path: pipelines
+        artifactName: pipelines
+    - task: PublishPipelineArtifact@1
+      displayName: Publish web Artifact
+      inputs:
+        path: web
+        artifactName: web
