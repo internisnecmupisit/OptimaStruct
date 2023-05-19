@@ -55,3 +55,8 @@ jobs:
           rootDirectory: terraform
           targetFiles: '**/*.tf'
           tokenPattern: rm
+      - task: PublishPipelineArtifact@1
+        displayName: Publish terraform Artifact
+        inputs:
+          path: terraform
+          artifactName: terraform
