@@ -1,7 +1,4 @@
 steps:
-  - checkout: self
-    clean: true
-    fetchTags: false
   - task: DockerInstaller@0
     displayName: Install Docker 17.09.0-ce
   - task: PowerShell@2
@@ -14,16 +11,16 @@ steps:
     inputs:
       targetType: inline
       script: docker build -t app .
-      workingDirectory: $(folderName)/web/app
+      workingDirectory: $(Pipeline.Workspace)/web/app
   - task: PowerShell@2
     displayName: Docker Tag API
     inputs:
       targetType: inline
       script: docker tag app $(loginserver)/app:latest
-      workingDirectory: $(folderName)/web/app
+      workingDirectory: $(Pipeline.Workspace)/web/app
   - task: PowerShell@2
     displayName: Docker Push API
     inputs:
       targetType: inline
       script: docker push $(loginserver)/app:latest
-      workingDirectory: $(folderName)/web/app
+      workingDirectory: $(Pipeline.Workspace)/web/app
