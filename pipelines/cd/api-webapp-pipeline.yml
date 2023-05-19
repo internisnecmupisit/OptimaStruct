@@ -33,5 +33,13 @@ jobs:
     - task: PowerShell@2
       inputs:
         filePath: '$(Pipeline.Workspace)/config/powershell.ps1'
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          $repositoryName = "$(Build.Repository.Name)"
+          $folderName = $repositoryName.Split('/')[1]
+          Write-Host "##vso[task.setvariable variable=folderName]$folderName"
+          Write-Host $folderName
     - template: 'web-api-CICD.yml'
     - template: 'web-app-CICD.yml'
