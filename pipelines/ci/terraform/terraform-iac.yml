@@ -38,6 +38,8 @@ jobs:
       preferTriggeringPipeline: true
       artifact: terraform
       path: $(Pipeline.Workspace)/terraform
+      allowPartiallySucceededBuilds: true
+      allowFailedBuilds: true
   - task: DownloadPipelineArtifact@2
     displayName: Download Terraform Artifact
     inputs:
