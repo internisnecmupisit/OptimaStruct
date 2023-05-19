@@ -1,0 +1,57 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - 'terraform/*'
+
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: refs/heads/main
+
+jobs:
+  - job: build
+    pool:
+      vmImage: 'windows-latest'
+    displayName: 'Setup terraform artifact'
+    workspace:
+      clean: all
+    steps:
+      - checkout: self
+        clean: true
+        fetchTags: false
+      - task: PowerShell@2
+        displayName: PowerShell Script
+        inputs:
+          targetType: inline
+          script: >
+            $rgterraform = "rg-"+$(projectname)+"-"+$(environment)
+            $saterraform = "sa"+$(projectname)+$(environment)
+            $acrname = "acr"+$(projectname)+$(environment)
+
+            Write-Host "##vso[task.setvariable variable=rgterraform]$rgterraform"
+            Write-Host "##vso[task.setvariable variable=saterraform]$saterraform"
+            Write-Host "##vso[task.setvariable variable=acrname]$acrname"
+      - task: AzureCLI@2
+        displayName: 'Setup terraform storage account'
+        inputs:
+          azureSubscription: 'sc-terraform'
+          scriptType: ps
+          scriptLocation: inlineScript
+          inlineScript: >-
+            az storage account create --name $(saterraform) --resource-group $(rgterraform) --location southeastasia --sku Standard_LRS
+            az storage container create --name terraform --account-name $(saterraform)
+            az storage account keys list -g $(rgterraform) -n $(saterraform)
+            $key = (az storage account keys list --account-name $(saterraform) --resource-group $(rgterraform) --query "[0].value" --output tsv)
+            Write-Host $key
+            Write-Host "##vso[task.setvariable variable=key]$key"
+          powerShellErrorActionPreference: continue
+      - task: replacetokens@5
+        displayName: Setup config for terraform
+        inputs:
+          rootDirectory: terraform
+          targetFiles: '**/*.tf'
+          tokenPattern: rm

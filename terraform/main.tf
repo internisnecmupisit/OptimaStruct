@@ -20,7 +20,7 @@ module "configuration" {
 
 module "resource-group" {
   source = "./modules/resource-group"
-  resource-group-name     = "rg-${module.configuration.project-name}-${module.configuration.environment}"
+  resource-group-name     = "__rgterraform__"
   resource-group-location = module.configuration.location
 }
 
@@ -100,7 +100,7 @@ locals {
 module "container-registry" {
   source = "./modules/container-registry"
 
-  container-name          = "cr${module.configuration.project-name}${module.configuration.environment}"
+  container-name          = "__acrname__"
   resource-group-name     = module.resource-group.name
   resource-group-location = module.resource-group.location
   container-sku-name      = "Standard"
@@ -111,7 +111,7 @@ module "service-plan" {
 
   service-plan-name       = "asp-${module.configuration.project-name}-${module.configuration.environment}"
   service-plan-os_type    = "Linux"
-  service-plan-sku_name   = "B3"
+  service-plan-sku_name   = "B1"
   resource-group-name     = module.resource-group.name
   resource-group-location = module.resource-group.location
 }

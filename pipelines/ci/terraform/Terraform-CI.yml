@@ -15,17 +15,11 @@ steps:
     inputs:
       targetType: inline
       script: >
-        $rgterraform = "rg-__projectname__-__environment__"
-        $saterraform = "sa__projectname____environment__"
+        $rgterraform = "rg-"+$(projectname)+"-"+$environment
+        $saterraform = "sa"+$(projectname)+$environment
 
         Write-Host "##vso[task.setvariable variable=rgterraform]$rgterraform"
         Write-Host "##vso[task.setvariable variable=saterraform]$saterraform"
-  - task: replacetokens@5
-    displayName: Replace tokens in **/*.yml
-    inputs:
-      rootDirectory: pipelines/ci/terraform
-      targetFiles: '**/*.yml'
-      tokenPattern: rm
   - task: AzureCLI@2
     displayName: 'Setup terraform storage account'
     inputs:
@@ -33,10 +27,10 @@ steps:
       scriptType: ps
       scriptLocation: inlineScript
       inlineScript: >-
-        az storage account create --name __saname__ --resource-group __rgterraform__ --location southeastasia --sku Standard_LRS
-        az storage container create --name terraform --account-name __saname__
-        az storage account keys list -g __rgterraform__ -n __saname__
-        $key = (az storage account keys list --account-name __saname__ --resource-group __rgterraform__ --query "[0].value" --output tsv)
+        az storage account create --name $(saterraform) --resource-group $(rgterraform) --location southeastasia --sku Standard_LRS
+        az storage container create --name terraform --account-name $(saterraform)
+        az storage account keys list -g $(rgterraform) -n $(saterraform)
+        $key = (az storage account keys list --account-name $(saterraform) --resource-group $(rgterraform) --query "[0].value" --output tsv)
         Write-Host $key
         Write-Host "##vso[task.setvariable variable=key;]$key"
       powerShellErrorActionPreference: continue
@@ -53,8 +47,8 @@ steps:
       command: 'init'
       workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
       backendServiceArm: 'sc-terraform'
-      backendAzureRmResourceGroupName: '__rgterraform__'
-      backendAzureRmStorageAccountName: '__saname__'
+      backendAzureRmResourceGroupName: '$(rgterraform)'
+      backendAzureRmStorageAccountName: '$(saterraform)'
       backendAzureRmContainerName: 'terraform'
       backendAzureRmKey: 'terraform.tfstate'
   - task: TerraformTaskV4@4
