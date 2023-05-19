@@ -121,8 +121,8 @@ jobs:
   - task: replacetokens@5
     displayName: Replace variable to deploy pipeline YML
     inputs:
-      rootDirectory: pipelines/cd
-      targetFiles: '**/*.yml'
+      rootDirectory: config
+      targetFiles: '**/*.ps1'
       tokenPattern: rm
   - task: replacetokens@5
     displayName: Replace variable to website
@@ -133,8 +133,8 @@ jobs:
   - task: PublishPipelineArtifact@1
     displayName: Publish Pipeline Artifact
     inputs:
-      path: pipelines
-      artifactName: pipelines
+      path: config
+      artifactName: config
   - task: PublishPipelineArtifact@1
     displayName: Publish web Artifact
     inputs:
