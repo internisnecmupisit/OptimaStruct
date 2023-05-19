@@ -14,16 +14,16 @@ steps:
     inputs:
       targetType: inline
       script: docker build -t api .
-      workingDirectory: $(Build.Repository.Name)/web/api
+      workingDirectory: $(Build.SourcesDirectory)/web/api
   - task: PowerShell@2
     displayName: Docker Tag API
     inputs:
       targetType: inline
       script: docker tag api $(loginserver)/api:latest
-      workingDirectory: $(Build.Repository.Name)/web/api
+      workingDirectory: $(Build.SourcesDirectory)/web/api
   - task: PowerShell@2
     displayName: Docker Push API
     inputs:
       targetType: inline
       script: docker push $(loginserver)/api:latest
-      workingDirectory: $(Build.Repository.Name)/web/api
+      workingDirectory: $(Build.SourcesDirectory)/web/api
