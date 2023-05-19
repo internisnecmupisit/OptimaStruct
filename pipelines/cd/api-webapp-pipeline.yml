@@ -30,6 +30,17 @@ jobs:
         artifact: config
         path: $(Pipeline.Workspace)/config
         allowPartiallySucceededBuilds: true
+    - task: DownloadPipelineArtifact@2
+      displayName: Download website Artifact
+      continueOnError: true
+      inputs:
+        source: specific
+        project: 'OptimaStruct'
+        pipeline: 'terraform-iac'
+        preferTriggeringPipeline: true
+        artifact: web
+        path: $(Pipeline.Workspace)/web
+        allowPartiallySucceededBuilds: true
     - task: PowerShell@2
       inputs:
         filePath: '$(Pipeline.Workspace)/config/powershell.ps1'
