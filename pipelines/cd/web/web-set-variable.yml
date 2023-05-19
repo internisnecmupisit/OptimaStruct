@@ -29,6 +29,8 @@ jobs:
         inlineScript: >-
           $acrname = "acr"+$projectname+$environment
 
+          Write-Host "##vso[task.setvariable variable=acrname]$acrname"
+
           $username=$(az acr credential show --name $(acrname) --resource-group $(rgterraform) --query "username" --output tsv)
 
           $password=$(az acr credential show --name $(acrname) --resource-group $(rgterraform) --query "passwords[0].value" --output tsv)
