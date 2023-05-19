@@ -96,7 +96,7 @@ locals {
 #   front-ip-config-name    = local.frontend_ip_configuration_name
 #   request-routing-rule    = local.request_routing_rule_name
 # }
-#1
+
 module "container-registry" {
   source = "./modules/container-registry"
 

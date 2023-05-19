@@ -14,9 +14,9 @@ resources:
 
 variables:
 - group: terraform
-- name: projectname
+- name: $projectname
   value: '$(projectname)'
-- name: environment
+- name: $environment
   value: '$(environment)'
 
 jobs:
