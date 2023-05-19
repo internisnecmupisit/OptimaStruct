@@ -27,6 +27,8 @@ jobs:
         scriptType: ps
         scriptLocation: inlineScript
         inlineScript: >-
+          az acr list --output table
+
           $acrname = "acr"+$projectname+$environment
 
           Write-Host "##vso[task.setvariable variable=acrname]$acrname"
