@@ -13,13 +13,13 @@ resources:
 
 variables:
 - group: terraform
-- name: rgterraform
+- name: $rgterraform
   value: '$(rgterraform)'
-- name: scterraform
+- name: $scterraform
   value: '$(scterraform)'
-- name: projectname
+- name: $projectname
   value: $(projectname)
-- name: environment
+- name: $environment
   value: $(environment)
 
 jobs:
