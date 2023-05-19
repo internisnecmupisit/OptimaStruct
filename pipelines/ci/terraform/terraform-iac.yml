@@ -20,16 +20,16 @@ jobs:
   pool:
     vmImage: windows-latest
   steps:
-  # - task: DownloadPipelineArtifact@2
-  #   displayName: Download Terraform config Artifact
-  #   continueOnError: true
-  #   inputs:
-  #     source: specific
-  #     project: 'OptimaStruct'
-  #     pipeline: 'terraform-iac'
-  #     preferTriggeringPipeline: true
-  #     artifact: terraform
-  #     path: $(Pipeline.Workspace)/terraform
+  - task: DownloadPipelineArtifact@2
+    displayName: Download Terraform config Artifact
+    continueOnError: true
+    inputs:
+      source: specific
+      project: 'OptimaStruct'
+      pipeline: 'terraform-iac'
+      preferTriggeringPipeline: true
+      artifact: terraform
+      path: $(Pipeline.Workspace)/terraform
   - task: DownloadPipelineArtifact@2
     displayName: Download Terraform Artifact
     inputs:
@@ -79,3 +79,56 @@ jobs:
     inputs:
       path: $(Pipeline.Workspace)/terraform
       artifactName: terraform
+  - task: AzureCLI@2
+    displayName: 'Get acr variable'
+    inputs:
+      connectedServiceNameARM: 'sc-terraform'
+      scriptType: ps
+      scriptLocation: inlineScript
+      inlineScript: >-
+        $acrname = "acr"+$(projectname)+$(environment)
+
+        Write-Host "##vso[task.setvariable variable=acrname]$acrname"
+
+        $username=$(az acr credential show --name $acrname --resource-group $(rgterraform) --query "username" --output tsv)
+
+        $password=$(az acr credential show --name $acrname --resource-group $(rgterraform) --query "passwords[0].value" --output tsv)
+
+        $loginserver = $username + ".azurecr.io"
+
+        Write-Host $username $password $loginserver
+
+        Write-Host "##vso[task.setvariable variable=username]$username"
+
+        Write-Host "##vso[task.setvariable variable=password]$password"
+
+        Write-Host "##vso[task.setvariable variable=loginserver]$loginserver"
+
+        $webapp = "rg-"+$(projectname)+"-app-"+$(environment)+".azurewebsites.net"
+
+        $webapi = "rg-"+$(projectname)+"-api-"+$(environment)+".azurewebsites.net"
+
+        Write-Host "##vso[task.setvariable variable=webapi]$webapi"
+          
+  - task: replacetokens@5
+    displayName: Replace variable to deploy pipeline YML
+    inputs:
+      rootDirectory: pipelines/cd
+      targetFiles: '**/*.yml'
+      tokenPattern: rm
+  - task: replacetokens@5
+    displayName: Replace variable to website
+    inputs:
+      rootDirectory: web/app
+      targetFiles: '**/.env'
+      tokenPattern: rm
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Pipeline Artifact
+    inputs:
+      path: pipelines
+      artifactName: pipelines
+  - task: PublishPipelineArtifact@1
+    displayName: Publish web Artifact
+    inputs:
+      path: web
+      artifactName: web
