@@ -25,7 +25,7 @@ jobs:
       inputs:
         source: specific
         project: 'OptimaStruct'
-        pipeline: 'terraform-iac'
+        pipeline: 'web-set-var'
         preferTriggeringPipeline: true
         artifact: config
         path: $(Pipeline.Workspace)/config
@@ -36,7 +36,7 @@ jobs:
       inputs:
         source: specific
         project: 'OptimaStruct'
-        pipeline: 'terraform-iac'
+        pipeline: 'web-set-var'
         preferTriggeringPipeline: true
         artifact: web
         path: $(Pipeline.Workspace)/web
