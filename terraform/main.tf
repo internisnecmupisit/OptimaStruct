@@ -18,17 +18,17 @@ module "configuration" {
   environment = __environment__
 }
 
-module "resource-group" {
-  source = "./modules/resource-group"
-  resource-group-name     = "__rgterraform__"
-  resource-group-location = module.configuration.location
-}
+# module "resource-group" {
+#   source = "./modules/resource-group"
+#   resource-group-name     = ""__rgterraform__""
+#   resource-group-location = module.configuration.location
+# }
 
 module "vnet" {
   source = "./modules/virtual-network"
 
   virturl-network-name    = "vnet-${module.configuration.project-name}-${module.configuration.environment}"
-  resource-group-name     = module.resource-group.name
+  resource-group-name     = "__rgterraform__"
   resource-group-location = module.resource-group.location
   address-space           = "10.0.0.0/16"
 }
@@ -37,7 +37,7 @@ module "asn-public" {
   source = "./modules/subnet-public"
 
   subnet-name          = "snet-${module.configuration.project-name}-public-${module.configuration.environment}"
-  resource-group-name  = module.resource-group.name
+  resource-group-name  = "__rgterraform__"
   virtual-network-name = module.vnet.name
   address-prefixes     = "10.0.1.0/24"
   delegation-name      = "AppServiceDelegationPublic"
@@ -49,7 +49,7 @@ module "asn-private" {
   source = "./modules/subnet-private"
 
   subnet-name          = "snet-${module.configuration.project-name}-private-${module.configuration.environment}"
-  resource-group-name  = module.resource-group.name
+  resource-group-name  = "__rgterraform__"
   virtual-network-name = module.vnet.name
   address-prefixes     = "10.0.2.0/24"
   delegation-name      = "AppServiceDelegation"
@@ -61,7 +61,7 @@ module "asn-private" {
 #   source = "./modules/public-ip"
 
 #   pip-name                = "pip-${module.configuration.project-name}-${module.configuration.environment}"
-#   resource-group-name     = module.resource-group.name
+#   resource-group-name     = "__rgterraform__"
 #   resource-group-location = module.resource-group.location
 #   allocation-method       = "Static"
 #   sku-name                = "Standard"
@@ -80,7 +80,7 @@ locals {
 #   source = "./modules/app-gateway"
 
 #   gw-name                 = "agw-${module.configuration.project-name}-${module.configuration.environment}"
-#   resource-group-name     = module.resource-group.name
+#   resource-group-name     = "__rgterraform__"
 #   resource-group-location = module.resource-group.location
 #   sku-name                = "WAF_v2"
 #   sku-tier                = "WAF_v2"
@@ -101,7 +101,7 @@ module "container-registry" {
   source = "./modules/container-registry"
 
   container-name          = "__acrname__"
-  resource-group-name     = module.resource-group.name
+  resource-group-name     = "__rgterraform__"
   resource-group-location = module.resource-group.location
   container-sku-name      = "Standard"
 }
@@ -112,7 +112,7 @@ module "service-plan" {
   service-plan-name       = "asp-${module.configuration.project-name}-${module.configuration.environment}"
   service-plan-os_type    = "Linux"
   service-plan-sku_name   = "B1"
-  resource-group-name     = module.resource-group.name
+  resource-group-name     = "__rgterraform__"
   resource-group-location = module.resource-group.location
 }
 
@@ -120,7 +120,7 @@ module "service-plan" {
 #   source = "./modules/network-security-group"
 
 #   nsg-name                = "nsg-public-${module.configuration.project-name}-${module.configuration.environment}"
-#   resource-group-name     = module.resource-group.name
+#   resource-group-name     = "__rgterraform__"
 #   resource-group-location = module.resource-group.location
 
 #   sr-name                    = "sr-public-${module.configuration.project-name}-${module.configuration.environment}"
@@ -138,7 +138,7 @@ module "webapp" {
   source = "./modules/webapp"
 
   webapp-name             = "ase-${module.configuration.project-name}-app-${module.configuration.environment}"
-  resource-group-name     = module.resource-group.name
+  resource-group-name     = "__rgterraform__"
   resource-group-location = module.resource-group.location
   service-plan-id         = module.service-plan.id
   acr-name                = module.container-registry.name
@@ -165,7 +165,7 @@ module "webapp" {
 #   source = "./modules/network-security-group"
 
 #   nsg-name                = "nsg-private-${module.configuration.project-name}-${module.configuration.environment}"
-#   resource-group-name     = module.resource-group.name
+#   resource-group-name     = "__rgterraform__"
 #   resource-group-location = module.resource-group.location
 
 #   sr-name                    = "sr-private-${module.configuration.project-name}-${module.configuration.environment}"
@@ -183,7 +183,7 @@ module "webapi" {
   source = "./modules/webapi"
 
   webapp-name             = "ase-${module.configuration.project-name}-api-${module.configuration.environment}"
-  resource-group-name     = module.resource-group.name
+  resource-group-name     = "__rgterraform__"
   resource-group-location = module.resource-group.location
   service-plan-id         = module.service-plan.id
   acr-name                = module.container-registry.name
@@ -215,7 +215,7 @@ module "webapi" {
 #   name = "webhook${module.configuration.project-name}api${module.configuration.environment}"
 #   location = module.configuration.location
 #   service-uri = module.webapi.webhook-uri
-#   rg-name = module.resource-group.name
+#   rg-name = "__rgterraform__"
 # }
 
 # module "webhook-app" {
@@ -225,14 +225,14 @@ module "webapi" {
 #   name = "webhook${module.configuration.project-name}app${module.configuration.environment}"
 #   location = module.configuration.location
 #   service-uri = module.webapp.webhook-uri
-#   rg-name = module.resource-group.name
+#   rg-name = "__rgterraform__"
 # }
 
 # module "storage-account" {
 #   source = "./modules/storage-account"
 
 #   storage-name             = "stcvprod"
-#   resource-group-name      = module.resource-group.name
+#   resource-group-name      = "__rgterraform__"
 #   resource-group-location  = module.resource-group.location
 #   account-tier             = "Standard"
 #   account-replication-type = "LRS"
@@ -242,7 +242,7 @@ module "webapi" {
 #   source = "./modules/poprodresql-server"
 
 #   psql-name               = "psql-cv-prod"
-#   resource-group-name     = module.resource-group.name
+#   resource-group-name     = "__rgterraform__"
 #   resource-group-location = module.resource-group.location
 
 #   administrator-login          = "psqladmin"
@@ -264,7 +264,7 @@ module "webapi" {
 #   source = "./modules/poprodresql-db"
 
 #   db-name             = "dbpsql-cv-prod"
-#   resource-group-name = module.resource-group.name
+#   resource-group-name = "__rgterraform__"
 #   server-name         = module.psqlserver.name
 #   charset             = "UTF8"
 #   collation           = "en-GB"
