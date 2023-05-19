@@ -72,18 +72,8 @@ jobs:
       command: apply
       workingDirectory: $(Pipeline.Workspace)/terraform
       environmentServiceNameAzureRM: 'sc-terraform'
-  - task: AzureCLI@2
-    displayName: 'Get acr variable'
+  - task: PublishPipelineArtifact@1
+    displayName: Publish terraform Artifact
     inputs:
-      connectedServiceNameARM: 'sc-terraform'
-      scriptType: ps
-      scriptLocation: inlineScript
-      inlineScript: >-
-        $acrname = "acr"+$projectname+$environment
-        $username=$(az acr credential show --name $(acrname) --resource-group $(rgterraform) --query "username" --output tsv)
-        $password=$(az acr credential show --name $(acrname) --resource-group $(rgterraform) --query "passwords[0].value" --output tsv)
-        $loginserver = $username + ".azurecr.io"
-        Write-Host $username $password $loginserver
-        Write-Host "##vso[task.setvariable variable=username]$username"
-        Write-Host "##vso[task.setvariable variable=password]$password"
-        Write-Host "##vso[task.setvariable variable=loginserver]$loginserver"
+      path: $(Pipeline.Workspace)/terraform
+      artifactName: terraform
