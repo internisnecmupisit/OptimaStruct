@@ -29,11 +29,15 @@ jobs:
           targetType: inline
           script: >
             $rgterraform = "rg-"+$(projectname)+"-"+$(environment)
+
             $saterraform = "sa"+$(projectname)+$(environment)
+
             $acrname = "acr"+$(projectname)+$(environment)
 
             Write-Host "##vso[task.setvariable variable=rgterraform]$rgterraform"
+
             Write-Host "##vso[task.setvariable variable=saterraform]$saterraform"
+
             Write-Host "##vso[task.setvariable variable=acrname]$acrname"
       - task: AzureCLI@2
         displayName: 'Setup terraform storage account'
@@ -43,10 +47,15 @@ jobs:
           scriptLocation: inlineScript
           inlineScript: >-
             az storage account create --name $(saterraform) --resource-group $(rgterraform) --location southeastasia --sku Standard_LRS
+
             az storage container create --name terraform --account-name $(saterraform)
+
             az storage account keys list -g $(rgterraform) -n $(saterraform)
+
             $key = (az storage account keys list --account-name $(saterraform) --resource-group $(rgterraform) --query "[0].value" --output tsv)
+
             Write-Host $key
+            
             Write-Host "##vso[task.setvariable variable=key]$key"
           powerShellErrorActionPreference: continue
       - task: replacetokens@5
