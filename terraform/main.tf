@@ -20,7 +20,7 @@ module "configuration" {
 
 module "resource-group" {
   source = "./modules/resource-group"
-  resource-group-name     = __rgterraform__
+  resource-group-name     = "__rgterraform__"
   resource-group-location = module.configuration.location
 }
 
@@ -100,7 +100,7 @@ locals {
 module "container-registry" {
   source = "./modules/container-registry"
 
-  container-name          = __acrname__
+  container-name          = "__acrname__"
   resource-group-name     = module.resource-group.name
   resource-group-location = module.resource-group.location
   container-sku-name      = "Standard"
