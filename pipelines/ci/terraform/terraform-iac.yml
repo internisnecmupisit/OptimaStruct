@@ -130,7 +130,7 @@ jobs:
     displayName: Replace variable to website
     inputs:
       rootDirectory: web/app
-      targetFiles: '**/.env'
+      targetFiles: '**/*.html'
       tokenPattern: rm
   - task: PublishPipelineArtifact@1
     displayName: Publish Pipeline Artifact
