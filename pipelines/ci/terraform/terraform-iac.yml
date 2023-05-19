@@ -2,8 +2,6 @@ resources:
   pipelines:
   - pipeline: terraform-setup
     source: terraform-setup
-    trigger:
-      branches:
   repositories:
   - repository: self
     type: git
