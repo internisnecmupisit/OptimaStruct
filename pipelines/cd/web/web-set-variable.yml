@@ -48,6 +48,9 @@ jobs:
           $webapp = "rg-"+$(projectname)+"-app-"+$(environment)+".azurewebsites.net"
 
           $webapi = "rg-"+$(projectname)+"-api-"+$(environment)+".azurewebsites.net"
+
+          Write-Host "##vso[task.setvariable variable=webapi]$webapi"
+          
     - task: replacetokens@5
       displayName: Replace variable to deploy pipeline YML
       inputs:
