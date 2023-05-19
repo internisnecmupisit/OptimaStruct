@@ -16,8 +16,8 @@ variables:
 - group: terraform
 - name: projectname
   value: $projectname
-- name: environment
-  value: environment
+- name: $environment
+  value: $environment
 
 jobs:
   - job: build
@@ -35,11 +35,11 @@ jobs:
         inputs:
           targetType: inline
           script: >
-            $rgterraform = "rg-"+$projectname+"-"+environment
+            $rgterraform = "rg-"+$projectname+"-"+$environment
 
-            $saterraform = "sa"+$projectname+environment
+            $saterraform = "sa"+$projectname+$environment
 
-            $acrname = "acr"+$projectname+environment
+            $acrname = "acr"+$projectname+$environment
 
             Write-Host "##vso[task.setvariable variable=rgterraform]$rgterraform"
 
