@@ -2,14 +2,6 @@ resources:
   pipelines:
   - pipeline: terraform-setup
     source: terraform-setup
-    trigger:
-      branches:
-        include:
-        - refs/heads/main
-  # repositories:
-  # - repository: self
-  #   type: git
-  #   ref: refs/heads/main
 
 variables:
 - group: terraform

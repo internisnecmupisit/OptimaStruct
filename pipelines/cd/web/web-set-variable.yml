@@ -2,10 +2,6 @@ resources:
   pipelines:
   - pipeline: terraform-iac
     source: terraform-iac
-    trigger:
-      branches:
-        include:
-        - refs/heads/main
 
 variables:
 - group: terraform
