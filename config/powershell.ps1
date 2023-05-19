@@ -1,8 +1,8 @@
-$loginserver = __loginserver__
+$loginserver = "__loginserver__"
 
-$username = __username__
+$username = "__username__"
 
-$password = __password__
+$password = "__password__"
 
 Write-Host "##vso[task.setvariable variable=username]$username"
 
