@@ -12,6 +12,13 @@ resources:
     type: git
     ref: refs/heads/main
 
+variables:
+- group: terraform
+- name: projectname
+  value: $(projectname)
+- name: environment
+  value: $(environment)
+
 jobs:
   - job: build
     pool:
@@ -55,7 +62,7 @@ jobs:
             $key = (az storage account keys list --account-name $(saterraform) --resource-group $(rgterraform) --query "[0].value" --output tsv)
 
             Write-Host $key
-            
+
             Write-Host "##vso[task.setvariable variable=key]$key"
           powerShellErrorActionPreference: continue
       - task: replacetokens@5

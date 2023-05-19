@@ -1,0 +1,89 @@
+resources:
+  pipelines:
+  - pipeline: terraform-setup
+    source: terraform-setup
+    trigger:
+      branches:
+        include:
+        - refs/heads/main
+  repositories:
+  - repository: self
+    type: git
+    ref: refs/heads/main
+
+variables:
+- group: terraform
+- name: rgterraform
+  value: '$(rgterraform)'
+- name: scterraform
+  value: '$(scterraform)'
+- name: projectname
+  value: $(projectname)
+- name: environment
+  value: $(environment)
+
+jobs:
+- job: Job_1
+  displayName: Agent job 1
+  pool:
+    vmImage: windows-latest
+  steps:
+  - task: DownloadPipelineArtifact@2
+    displayName: Download Terraform Artifact
+    inputs:
+      source: specific
+      project: 'OptimaStruct'
+      pipeline: 'terraform-setup'
+      preferTriggeringPipeline: true
+      artifact: terraform
+      path: $(Pipeline.Workspace)/terraform
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Pipeline Artifact
+    enabled: False
+    inputs:
+      path: $(Pipeline.Workspace)/terraform
+      artifactName: terraform
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
+    displayName: Install Terraform latest
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)/terraform
+      terraformVersion: 'latest'
+
+  - task: TerraformTaskV4@4
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      workingDirectory: $(Pipeline.Workspace)/terraform
+      backendServiceArm: 'sc-terraform'
+      backendAzureRmResourceGroupName: '$(rgterraform)'
+      backendAzureRmStorageAccountName: '$(saterraform)'
+      backendAzureRmContainerName: 'terraform'
+      backendAzureRmKey: 'terraform.tfstate'
+  - task: TerraformTaskV4@4
+    displayName: 'Terraform : plan'
+    inputs:
+      command: plan
+      workingDirectory: $(Pipeline.Workspace)/terraform
+      environmentServiceNameAzureRM: 'sc-terraform'
+  - task: TerraformTaskV4@4
+    displayName: 'Terraform : azurerm'
+    continueOnError: True
+    inputs:
+      command: apply
+      workingDirectory: $(Pipeline.Workspace)/terraform
+      environmentServiceNameAzureRM: 'sc-terraform'
+  - task: AzureCLI@2
+    displayName: 'Get acr variable'
+    inputs:
+      connectedServiceNameARM: 'sc-terraform'
+      scriptType: ps
+      scriptLocation: inlineScript
+      inlineScript: >-
+        $acrname = "acr"+$projectname+$environment
+        $username=$(az acr credential show --name $(acrname) --resource-group $(rgterraform) --query "username" --output tsv)
+        $password=$(az acr credential show --name $(acrname) --resource-group $(rgterraform) --query "passwords[0].value" --output tsv)
+        $loginserver = $username + ".azurecr.io"
+        Write-Host $username $password $loginserver
+        Write-Host "##vso[task.setvariable variable=username]$username"
+        Write-Host "##vso[task.setvariable variable=password]$password"
+        Write-Host "##vso[task.setvariable variable=loginserver]$loginserver"
