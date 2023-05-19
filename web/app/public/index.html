@@ -98,7 +98,7 @@
             const input = inputField.value;
             const data = { input: input };
 
-            fetch(`http://__webapi__/checkPalindrome`, {
+            fetch(`https://__webapi__/checkPalindrome`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)

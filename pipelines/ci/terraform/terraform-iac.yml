@@ -114,9 +114,9 @@ jobs:
 
         Write-Host "##vso[task.setvariable variable=loginserver]$loginserver"
 
-        $webapp = "rg-"+$(projectname)+"-app-"+$(environment)+".azurewebsites.net"
+        $webapp = "ase-"+$(projectname)+"-app-"+$(environment)+".azurewebsites.net"
 
-        $webapi = "rg-"+$(projectname)+"-api-"+$(environment)+".azurewebsites.net"
+        $webapi = "ase-"+$(projectname)+"-api-"+$(environment)+".azurewebsites.net"
 
         Write-Host "##vso[task.setvariable variable=webapi]$webapi"
           
