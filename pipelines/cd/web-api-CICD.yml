@@ -8,7 +8,7 @@ steps:
     displayName: Docker login to ACR
     inputs:
       targetType: inline
-      script: docker login __loginserver__ -u __username__ -p __password__
+      script: docker login $(loginserver) -u $(username) -p $(password)
   - task: PowerShell@2
     displayName: Docker Build API
     inputs:
@@ -19,11 +19,11 @@ steps:
     displayName: Docker Tag API
     inputs:
       targetType: inline
-      script: docker tag api __loginserver__/api:latest
+      script: docker tag api $(loginserver)/api:latest
       workingDirectory: web/api
   - task: PowerShell@2
     displayName: Docker Push API
     inputs:
       targetType: inline
-      script: docker push __loginserver__/api:latest
+      script: docker push $(loginserver)/api:latest
       workingDirectory: web/api
