@@ -4,8 +4,6 @@ resources:
     source: terraform-setup
     trigger:
       branches:
-        include:
-        - refs/heads/main
   repositories:
   - repository: self
     type: git
