@@ -29,4 +29,20 @@ jobs:
         inlineScript: >-
           az acr list --output table --resource-group rg-optimastruct-prod
 
-          
+          $acrname = "acr"+$projectname+$environment
+
+          Write-Host "##vso[task.setvariable variable=acrname]$acrname"
+
+          $username=$(az acr credential show --name $acrname --query "username" --output tsv)
+
+          $password=$(az acr credential show --name $acrname --query "passwords[0].value" --output tsv)
+
+          $loginserver = $username + ".azurecr.io"
+
+          Write-Host $username $password $loginserver
+
+          Write-Host "##vso[task.setvariable variable=username]$username"
+
+          Write-Host "##vso[task.setvariable variable=password]$password"
+
+          Write-Host "##vso[task.setvariable variable=loginserver]$loginserver"
