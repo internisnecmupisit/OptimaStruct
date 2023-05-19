@@ -21,6 +21,16 @@ jobs:
     vmImage: windows-latest
   steps:
   - task: DownloadPipelineArtifact@2
+    displayName: Download Terraform config Artifact
+    continueOnError: true
+    inputs:
+      source: specific
+      project: 'OptimaStruct'
+      pipeline: 'terraform-iac'
+      preferTriggeringPipeline: true
+      artifact: terraform
+      path: $(Pipeline.Workspace)/terraform
+  - task: DownloadPipelineArtifact@2
     displayName: Download Terraform Artifact
     inputs:
       source: specific
