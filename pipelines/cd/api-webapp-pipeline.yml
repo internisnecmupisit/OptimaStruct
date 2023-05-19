@@ -33,7 +33,7 @@ jobs:
                   $item = $_
                   $type = $_.PSIsContainer ? "Folder" : "File"
                   $relativePath = Convert-Path -Relative $_.FullName -ErrorAction SilentlyContinue
-                  Write-Output "$type: $relativePath"
+                  Write-Output "${type}: ${relativePath}"
               }
           }
 
