@@ -23,7 +23,6 @@ module "configuration" {
 #   resource-group-name     = ""__rgterraform__""
 #   resource-group-location = module.configuration.location
 # }
-# g
 
 module "vnet" {
   source = "./modules/virtual-network"

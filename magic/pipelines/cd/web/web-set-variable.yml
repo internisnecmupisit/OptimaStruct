@@ -4,8 +4,8 @@ trigger:
       - main
   paths:
     include:
-      - 'web/api/*'
-      - 'web/app/*'
+      - '$(root)web/api/*'
+      - '$(root)web/app/*'
 
 resources:
   pipelines:
