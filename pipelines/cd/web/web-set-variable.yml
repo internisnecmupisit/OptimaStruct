@@ -22,6 +22,8 @@ variables:
   value: $(projectname)
 - name: $environment
   value: $(environment)
+- name: $root
+  value: '$(root)'
 
 jobs:
 - job: Job_1
@@ -66,22 +68,22 @@ jobs:
       - task: replacetokens@5
         displayName: Replace variable to deploy pipeline YML
         inputs:
-          rootDirectory: config
+          rootDirectory: $(root)config
           targetFiles: '**/*.ps1'
           tokenPattern: rm
       - task: replacetokens@5
         displayName: Replace variable to website
         inputs:
-          rootDirectory: web/app
+          rootDirectory: $(root)web/app
           targetFiles: '**/*.html'
           tokenPattern: rm
       - task: PublishPipelineArtifact@1
         displayName: Publish Pipeline Artifact
         inputs:
-          path: config
+          path: $(root)config
           artifactName: config
       - task: PublishPipelineArtifact@1
         displayName: Publish web Artifact
         inputs:
-          path: web
+          path: $(root)web
           artifactName: web

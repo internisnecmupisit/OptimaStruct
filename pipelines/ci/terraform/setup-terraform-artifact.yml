@@ -18,6 +18,8 @@ variables:
   value: '$(projectname)'
 - name: $environment
   value: '$(environment)'
+- name: $root
+  value: '$(root)'
 
 jobs:
   - job: build
@@ -70,11 +72,11 @@ jobs:
       - task: replacetokens@5
         displayName: Setup config for terraform
         inputs:
-          rootDirectory: terraform
+          rootDirectory: $(root)terraform
           targetFiles: '**/*.tf'
           tokenPattern: rm
       - task: PublishPipelineArtifact@1
         displayName: Publish terraform Artifact
         inputs:
-          path: terraform
+          path: $(root)terraform
           artifactName: terraform

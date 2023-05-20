@@ -15,6 +15,8 @@ variables:
   value: $(projectname)
 - name: $environment
   value: $(environment)
+- name: $root
+  value: '$(root)'
 
 jobs:
 - job: Job_1
@@ -27,7 +29,7 @@ jobs:
     continueOnError: true
     inputs:
       source: specific
-      project: 'OptimaStruct'
+      project: '$(System.TeamProject)'
       pipeline: 'terraform-iac'
       preferTriggeringPipeline: true
       artifact: terraform
@@ -38,7 +40,7 @@ jobs:
     displayName: Download Terraform Artifact
     inputs:
       source: specific
-      project: 'OptimaStruct'
+      project: '$(System.TeamProject)'
       pipeline: 'terraform-setup'
       preferTriggeringPipeline: true
       artifact: terraform
@@ -54,7 +56,6 @@ jobs:
     inputs:
       workingDirectory: $(Pipeline.Workspace)/terraform
       terraformVersion: 'latest'
-
   - task: TerraformTaskV4@4
     inputs:
       provider: 'azurerm'

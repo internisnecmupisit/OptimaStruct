@@ -17,7 +17,7 @@ jobs:
       continueOnError: true
       inputs:
         source: specific
-        project: 'OptimaStruct'
+        project: '$(System.TeamProject)'
         pipeline: 'web-set-var'
         preferTriggeringPipeline: true
         artifact: config
@@ -28,7 +28,7 @@ jobs:
       continueOnError: true
       inputs:
         source: specific
-        project: 'OptimaStruct'
+        project: '$(System.TeamProject)'
         pipeline: 'web-set-var'
         preferTriggeringPipeline: true
         artifact: web
