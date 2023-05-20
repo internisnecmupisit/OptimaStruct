@@ -12,6 +12,8 @@ variables:
   value: '$(sonarqubeprojectkey)'
 - name: $projectname
   value: $(projectname)
+- name: $root
+  value: '$(root)'
 
 jobs:
 - job: build

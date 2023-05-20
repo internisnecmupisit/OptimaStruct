@@ -7,7 +7,7 @@ steps:
       configMode: manual
       cliProjectKey: $(sonarqubeprojectkey)
       cliProjectName: sonar.$(projectname)
-      cliSources: $(Pipeline.Workspace)/web
+      cliSources: $(root)web
   - task: SonarQubeAnalyze@5
     displayName: Run Code Analysis
   - task: SonarQubePublish@5
