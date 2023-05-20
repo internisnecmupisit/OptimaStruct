@@ -1,3 +1,12 @@
+variables:
+- group: terraform
+- name: $projectname
+  value: '$(projectname)'
+- name: $environment
+  value: '$(environment)'
+- name: $root
+  value: '$(root)'
+
 trigger:
   branches:
     include:
@@ -11,15 +20,6 @@ resources:
   - repository: self
     type: git
     ref: refs/heads/main
-
-variables:
-- group: terraform
-- name: $projectname
-  value: '$(projectname)'
-- name: $environment
-  value: '$(environment)'
-- name: $root
-  value: '$(root)'
 
 jobs:
   - job: build

@@ -1,3 +1,16 @@
+variables:
+- group: terraform
+- name: $rgterraform
+  value: '$(rgterraform)'
+- name: $scterraform
+  value: '$(scterraform)'
+- name: $projectname
+  value: $(projectname)
+- name: $environment
+  value: $(environment)
+- name: $root
+  value: '$(root)'
+
 trigger:
   branches:
     include:
@@ -11,19 +24,6 @@ resources:
   pipelines:
   - pipeline: terraform-iac
     source: terraform-iac
-
-variables:
-- group: terraform
-- name: $rgterraform
-  value: '$(rgterraform)'
-- name: $scterraform
-  value: '$(scterraform)'
-- name: $projectname
-  value: $(projectname)
-- name: $environment
-  value: $(environment)
-- name: $root
-  value: '$(root)'
 
 jobs:
 - job: Job_1
