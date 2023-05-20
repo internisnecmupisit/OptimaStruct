@@ -209,25 +209,25 @@ module "webapi" {
 #   subnet-id = module.asn-private.id
 # }
 
-# module "webhook-api" {
-#   source = "./modules/webhook"
+module "webhook-api" {
+  source = "./modules/webhook"
 
-#   registry-name = module.container-registry.name
-#   name = "webhook${module.configuration.project-name}api${module.configuration.environment}"
-#   location = module.configuration.location
-#   service-uri = module.webapi.webhook-uri
-#   rg-name = "__rgterraform__"
-# }
+  registry-name = module.container-registry.name
+  name = "webhook${module.configuration.project-name}api${module.configuration.environment}"
+  location = module.configuration.location
+  service-uri = module.webapi.webhook-uri
+  rg-name = "__rgterraform__"
+}
 
-# module "webhook-app" {
-#   source = "./modules/webhook"
+module "webhook-app" {
+  source = "./modules/webhook"
 
-#   registry-name = module.container-registry.name
-#   name = "webhook${module.configuration.project-name}app${module.configuration.environment}"
-#   location = module.configuration.location
-#   service-uri = module.webapp.webhook-uri
-#   rg-name = "__rgterraform__"
-# }
+  registry-name = module.container-registry.name
+  name = "webhook${module.configuration.project-name}app${module.configuration.environment}"
+  location = module.configuration.location
+  service-uri = module.webapp.webhook-uri
+  rg-name = "__rgterraform__"
+}
 
 # module "storage-account" {
 #   source = "./modules/storage-account"
