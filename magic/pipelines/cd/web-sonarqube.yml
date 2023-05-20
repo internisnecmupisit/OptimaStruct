@@ -1,0 +1,14 @@
+steps:
+  - task: SonarQubePrepare@5
+    displayName: Prepare analysis on SonarQube
+    inputs:
+      SonarQube: 'sc-sonarqube'
+      scannerMode: CLI
+      configMode: manual
+      cliProjectKey: $(sonarqubeprojectkey)
+      cliProjectName: sonar.$(projectname)
+      cliSources: magic/web
+  - task: SonarQubeAnalyze@5
+    displayName: Run Code Analysis
+  - task: SonarQubePublish@5
+    displayName: Publish Quality Gate Result

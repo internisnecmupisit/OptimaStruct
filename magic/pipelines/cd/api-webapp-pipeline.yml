@@ -6,6 +6,13 @@ resources:
     type: git
     ref: refs/heads/main
 
+variables:
+- group: terraform
+- name: $sonarqubeprojectkey
+  value: '$(sonarqubeprojectkey)'
+- name: $projectname
+  value: $(projectname)
+
 jobs:
 - job: build
   displayName: 'API and Web App Build'
@@ -38,4 +45,5 @@ jobs:
       inputs:
         filePath: '$(Pipeline.Workspace)/config/powershell.ps1'
     - template: 'web-api-CICD.yml'
+    - template: 'web-sonarqube.yml'
     - template: 'web-app-CICD.yml'
