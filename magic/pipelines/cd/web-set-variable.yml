@@ -51,8 +51,6 @@ jobs:
 
             $loginserver = $username + ".azurecr.io"
 
-            Write-Host $username $password $loginserver
-
             Write-Host "##vso[task.setvariable variable=username]$username"
 
             Write-Host "##vso[task.setvariable variable=password]$password"
