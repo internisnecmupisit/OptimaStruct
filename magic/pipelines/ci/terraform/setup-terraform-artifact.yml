@@ -6,6 +6,8 @@ variables:
   value: '$(environment)'
 - name: $root
   value: '$(root)'
+- name: $saterraform
+  value: '$(saterraform)'
 
 trigger:
   branches:
@@ -19,7 +21,7 @@ resources:
   repositories:
   - repository: self
     type: git
-    ref: refs/heads/main
+    ref: refs/heads/feature/intern
 
 jobs:
   - job: build
@@ -39,15 +41,11 @@ jobs:
           script: >
             $rgterraform = "rg-"+$(projectname)+"-"+$(environment)
 
-            $saterraform = "sa"+$(projectname)+$(environment)
-
             $acrname = "acr"+$(projectname)+$(environment)
 
             Write-Host $(projectname) $(environment)
 
             Write-Host "##vso[task.setvariable variable=rgterraform]$rgterraform"
-
-            Write-Host "##vso[task.setvariable variable=saterraform]$saterraform"
 
             Write-Host "##vso[task.setvariable variable=acrname]$acrname"
       - task: AzureCLI@2

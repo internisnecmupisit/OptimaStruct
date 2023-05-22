@@ -113,7 +113,7 @@ module "service-plan" {
 
   service-plan-name       = "asp-${module.configuration.project-name}-${module.configuration.environment}"
   service-plan-os_type    = "Linux"
-  service-plan-sku_name   = "B1"
+  service-plan-sku_name   = "B3"
   resource-group-name     = "__rgterraform__"
   resource-group-location = module.configuration.location
 }
@@ -209,6 +209,7 @@ module "webapi" {
 #   app-service-id = module.webapi.id
 #   subnet-id = module.asn-private.id
 # }
+# g
 
 module "webhook-api" {
   source = "./modules/webhook"

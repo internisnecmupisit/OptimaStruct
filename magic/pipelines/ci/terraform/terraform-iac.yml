@@ -9,8 +9,8 @@ variables:
 - group: terraform
 - name: $rgterraform
   value: '$(rgterraform)'
-- name: $scterraform
-  value: '$(scterraform)'
+- name: $saterraform
+  value: '$(saterraform)'
 - name: $projectname
   value: $(projectname)
 - name: $environment
