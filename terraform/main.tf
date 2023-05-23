@@ -11,8 +11,6 @@ provider "azurerm" {
   features {}
 }
 
-# gg
-
 module "configuration" {
   source = "./configuration"
 
