@@ -41,8 +41,8 @@ jobs:
         inputs:
           azureSubscription: 'sc-terraform'
           scriptType: ps
-          scriptLocation: filePath
-          filePath: 'scripts\setup\setup-terraform.ps1'
+          scriptLocation: scriptPath
+          scriptPath: 'scripts\setup\setup-terraform.ps1'
           powerShellErrorActionPreference: stop
       - task: replacetokens@5
         displayName: Setup config for terraform
