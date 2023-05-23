@@ -56,9 +56,13 @@ jobs:
       artifact: terraform
       path: $(Pipeline.Workspace)/terraform
   - task: PowerShell@2
-    displayName: Setup Variables
+    displayName: 'Check Pipeline Terraform Artifact'
     inputs:
-      filePath: 'scripts\iac\iac-script.ps1'
+      targetType: 'inline'
+      script: |
+        $rgterraform = "rg-"+$(projectname)+"-"+$(environment)
+
+        Write-Host "##vso[task.setvariable variable=rgterraform]$rgterraform"
   - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
     displayName: Install Terraform latest
     inputs:
