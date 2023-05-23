@@ -1,6 +1,6 @@
-$rgterraform = "rg-"+$(projectname)+"-"+$(environment)
+$rgterraform = "rg-"+$projectname+"-"+$environment
 
-$acrname = "acr"+$(projectname)+$(environment)
+$acrname = "acr"+$projectname+$environment
 
 Write-Host "##vso[task.setvariable variable=rgterraform]$rgterraform"
 
