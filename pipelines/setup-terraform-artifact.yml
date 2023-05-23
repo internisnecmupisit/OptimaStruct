@@ -4,15 +4,13 @@ variables:
   value: '$(projectname)'
 - name: $environment
   value: '$(environment)'
-- name: $root
-  value: '$(root)'
 - name: $saterraform
   value: '$(saterraform)'
 
 trigger:
   branches:
     include:
-      - main
+      - vol2
   paths:
     include:
       - terraform/*
@@ -37,40 +35,23 @@ jobs:
       - task: PowerShell@2
         displayName: Setup Variables
         inputs:
-          targetType: inline
-          script: >
-            $rgterraform = "rg-"+$(projectname)+"-"+$(environment)
-
-            $acrname = "acr"+$(projectname)+$(environment)
-
-            Write-Host "##vso[task.setvariable variable=rgterraform]$rgterraform"
-
-            Write-Host "##vso[task.setvariable variable=acrname]$acrname"
+          filePath: 'scripts\setup\setup-variable.ps1'
       - task: AzureCLI@2
-        displayName: 'Setup terraform storage account'
+        displayName: 'Setup Terraform'
         inputs:
           azureSubscription: 'sc-terraform'
           scriptType: ps
-          scriptLocation: inlineScript
-          inlineScript: >-
-            az storage account create --name $(saterraform) --resource-group $(rgterraform) --location southeastasia --sku Standard_LRS
-
-            az storage container create --name terraform --account-name $(saterraform)
-
-            az storage account keys list -g $(rgterraform) -n $(saterraform)
-
-            $key = (az storage account keys list --account-name $(saterraform) --resource-group $(rgterraform) --query "[0].value" --output tsv)
-
-            Write-Host "##vso[task.setvariable variable=key]$key"
-          powerShellErrorActionPreference: continue
+          scriptLocation: filePath
+          filePath: 'scripts\setup\setup-terraform.ps1'
+          powerShellErrorActionPreference: stop
       - task: replacetokens@5
         displayName: Setup config for terraform
         inputs:
-          rootDirectory: $(root)terraform
-          targetFiles: '**/*.tf'
+          rootDirectory: terraform
+          targetFiles: '/*.tf'
           tokenPattern: rm
       - task: PublishPipelineArtifact@1
         displayName: Publish terraform Artifact
         inputs:
-          path: $(root)terraform
+          path: terraform
           artifactName: terraform

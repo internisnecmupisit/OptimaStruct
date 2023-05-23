@@ -9,3 +9,7 @@ output "environment" {
 output "location" {
     value = var.location
 }
+
+output "rgname" {
+    value = var.rgname
+}

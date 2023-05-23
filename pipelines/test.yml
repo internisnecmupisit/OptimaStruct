@@ -1,0 +1,10 @@
+- job: checkArtifact
+  displayName: 'Check Pipeline Artifact'
+  steps:
+    - script: |
+        # Check if the artifact folder exists
+        if [ -d "$(Pipeline.Workspace)/terraform" ]; then
+          echo "Artifact exists."
+        else
+          echo "Artifact does not exist."
+        fi

@@ -8,3 +8,6 @@ variable "location" {
     type = string
     default = "Southeast asia"
 }
+variable "rgname" {
+    type = string
+}

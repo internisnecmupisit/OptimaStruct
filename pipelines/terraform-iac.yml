@@ -7,16 +7,12 @@ resources:
 
 variables:
 - group: terraform
-- name: $rgterraform
-  value: '$(rgterraform)'
 - name: $saterraform
   value: '$(saterraform)'
 - name: $projectname
   value: $(projectname)
 - name: $environment
   value: $(environment)
-- name: $root
-  value: '$(root)'
 
 jobs:
 - job: Job_1
