@@ -2,10 +2,16 @@ jobs:
 - job: checkArtifact
   displayName: 'Check Pipeline Artifact'
   steps:
-    - script: |
-        # Check if the artifact folder exists
-        if [ -d "$(Pipeline.Workspace)/terraform" ]; then
-          echo "Artifact exists."
-        else
-          echo "Artifact does not exist."
-        fi
+    - task: PowerShell@2
+      displayName: 'Check Pipeline Artifact'
+      inputs:
+        targetType: 'inline'
+        script: |
+          $artifactExists = Test-Path -Path "$(Pipeline.Workspace)/terraform"
+          if ($artifactExists) {
+              Write-Host "Artifact exists."
+              Write-Host "##vso[task.setvariable variable=ArtifactExists]True"
+          } else {
+              Write-Host "Artifact does not exist."
+              Write-Host "##vso[task.setvariable variable=ArtifactExists]False"
+          }
