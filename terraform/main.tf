@@ -75,7 +75,7 @@ module "service-plan" {
 
   service-plan-name       = "asp-${module.configuration.project-name}-${module.configuration.environment}"
   service-plan-os_type    = "Linux"
-  service-plan-sku_name   = "B3"
+  service-plan-sku_name   = "B1"
   resource-group-name     = module.configuration.rgname
   resource-group-location = module.configuration.location
 }
