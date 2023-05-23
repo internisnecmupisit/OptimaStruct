@@ -1,3 +1,4 @@
+jobs:
 - job: checkArtifact
   displayName: 'Check Pipeline Artifact'
   steps:
