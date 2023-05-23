@@ -20,8 +20,22 @@ jobs:
   pool:
     vmImage: windows-latest
   steps:
+  - task: PowerShell@2
+    displayName: 'Check Pipeline Terraform Artifact'
+    inputs:
+      targetType: 'inline'
+      script: |
+        $artifactExists = Test-Path -Path "$(Pipeline.Workspace)/terraform"
+        if ($artifactExists) {
+            Write-Host "Artifact exists."
+            Write-Host "##vso[task.setvariable variable=ArtifactExists]true"
+        } else {
+            Write-Host "Artifact does not exist."
+            Write-Host "##vso[task.setvariable variable=ArtifactExists]false"
+        }
   - task: DownloadPipelineArtifact@2
     displayName: Download Terraform config Artifact
+    condition: eq(variables['ArtifactExists'], true)
     continueOnError: true
     inputs:
       source: specific
@@ -41,12 +55,10 @@ jobs:
       preferTriggeringPipeline: true
       artifact: terraform
       path: $(Pipeline.Workspace)/terraform
-  - task: PublishPipelineArtifact@1
-    displayName: Publish Pipeline Artifact
-    enabled: False
+  - task: PowerShell@2
+    displayName: Setup Variables
     inputs:
-      path: $(Pipeline.Workspace)/terraform
-      artifactName: terraform
+      filePath: 'scripts\iac\iac-script.ps1'
   - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
     displayName: Install Terraform latest
     inputs:
