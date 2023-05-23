@@ -1,0 +1,81 @@
+variables:
+- group: terraform
+- name: $projectname
+  value: $(projectname)
+- name: $environment
+  value: $(environment)
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - $(root)web/api/*
+      - $(root)web/app/*
+
+resources:
+  pipelines:
+  - pipeline: terraform-iac
+    source: terraform-iac
+
+jobs:
+- job: Job_1
+  displayName: Web-set-variable
+  pool:
+    vmImage: windows-latest
+  steps:
+      - checkout: self
+        clean: true
+        fetchTags: false
+      - task: AzureCLI@2
+        displayName: 'Get acr variable'
+        inputs:
+          connectedServiceNameARM: 'sc-terraform'
+          scriptType: ps
+          scriptLocation: inlineScript
+          inlineScript: >-
+            $acrname = "acr"+$(projectname)+$(environment)
+
+            Write-Host "##vso[task.setvariable variable=acrname]$acrname"
+
+            $username=$(az acr credential show --name $acrname --resource-group $(rgterraform) --query "username" --output tsv)
+
+            $password=$(az acr credential show --name $acrname --resource-group $(rgterraform) --query "passwords[0].value" --output tsv)
+
+            $loginserver = $username + ".azurecr.io"
+
+            Write-Host "##vso[task.setvariable variable=username]$username"
+
+            Write-Host "##vso[task.setvariable variable=password]$password"
+
+            Write-Host "##vso[task.setvariable variable=loginserver]$loginserver"
+
+            $webapp = "ase-"+$(projectname)+"-app-"+$(environment)+".azurewebsites.net"
+
+            $webapi = "ase-"+$(projectname)+"-api-"+$(environment)+".azurewebsites.net"
+
+            Write-Host "##vso[task.setvariable variable=webapi]$webapi"
+              
+      - task: replacetokens@5
+        displayName: Replace variable to deploy pipeline YML
+        inputs:
+          rootDirectory: $(root)config
+          targetFiles: '**/*.ps1'
+          tokenPattern: rm
+      - task: replacetokens@5
+        displayName: Replace variable to website
+        inputs:
+          rootDirectory: $(root)web/app
+          targetFiles: '**/*.html'
+          tokenPattern: rm
+      - task: PublishPipelineArtifact@1
+        displayName: Publish Pipeline Artifact
+        inputs:
+          path: $(root)config
+          artifactName: config
+      - task: PublishPipelineArtifact@1
+        displayName: Publish web Artifact
+        inputs:
+          path: $(root)web
+          artifactName: web
