@@ -33,16 +33,45 @@ jobs:
         clean: true
         fetchTags: false
       - task: PowerShell@2
-        displayName: Setup Variables
+        displayName: 'Setup Variable'
         inputs:
-          filePath: 'scripts\setup\setup-variable.ps1'
+          targetType: 'inline'
+          script: |
+            $rgterraform = "rg-"+$(projectname)+"-"+$(environment)
+
+            $acrname = "acr"+$(projectname)+$(environment)
+
+            Write-Host "##vso[task.setvariable variable=rgterraform]$rgterraform"
+
+            Write-Host "##vso[task.setvariable variable=acrname]$acrname"
       - task: AzureCLI@2
         displayName: 'Setup Terraform'
         inputs:
           azureSubscription: 'sc-terraform'
           scriptType: ps
-          scriptLocation: scriptPath
-          scriptPath: 'scripts\setup\setup-terraform.ps1'
+          scriptLocation: inlineScript
+          inlineScript: >-
+            if (az group show --name $(rgterraform)) {
+                if (az storage account show --name $(saterraform) --resource-group $(rgterraform)) {
+                    exit 0
+                }
+                else {
+                    az storage account create --name $(saterraform) --resource-group $(rgterraform) --location southeastasia --sku Standard_LRS
+
+                    az storage container create --name terraform --account-name $(saterraform)
+
+                    az storage account keys list -g $(rgterraform) -n $(saterraform)
+                }
+            }
+            else {
+                az group create --name $(rgterraform) --location southeastasia
+
+                az storage account create --name $(saterraform) --resource-group $(rgterraform) --location southeastasia --sku Standard_LRS
+
+                az storage container create --name terraform --account-name $(saterraform)
+
+                az storage account keys list -g $(rgterraform) -n $(saterraform)
+            }
           powerShellErrorActionPreference: stop
       - task: replacetokens@5
         displayName: Setup config for terraform
