@@ -15,13 +15,13 @@ trigger:
       - main
   paths:
     include:
-      - $(root)terraform/*
+      - terraform/*
 
 resources:
   repositories:
   - repository: self
     type: git
-    ref: refs/heads/feature/intern
+    ref: refs/heads/main
 
 jobs:
   - job: build
@@ -35,15 +35,13 @@ jobs:
         clean: true
         fetchTags: false
       - task: PowerShell@2
-        displayName: PowerShell Script
+        displayName: Setup Variables
         inputs:
           targetType: inline
           script: >
             $rgterraform = "rg-"+$(projectname)+"-"+$(environment)
 
             $acrname = "acr"+$(projectname)+$(environment)
-
-            Write-Host $(projectname) $(environment)
 
             Write-Host "##vso[task.setvariable variable=rgterraform]$rgterraform"
 

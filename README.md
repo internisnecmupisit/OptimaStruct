@@ -1,2 +1,2 @@
 # OptimaStruct
-OptimaStruct is in development
+OptimaStruct is in development vol.2
