@@ -16,7 +16,7 @@ module "configuration" {
 
   project-name = __projectname__
   environment = __environment__
-  rgname = "__rgterraform1__"
+  rgname = "__rgterraform__"
 }
 
 module "vnet" {
