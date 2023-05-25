@@ -10,7 +10,7 @@ variables:
 trigger:
   branches:
     include:
-      - vol2
+      - cv-stg
   paths:
     include:
       - terraform/*
