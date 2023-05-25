@@ -83,7 +83,7 @@ module "service-plan" {
 module "webapp" {
   source = "./modules/webapp"
 
-  webapp-name             = "ase-${module.configuration.project-name}-app-${module.configuration.environment}"
+  webapp-name             = "ase-app-${module.configuration.project-name}-${module.configuration.environment}"
   resource-group-name     = module.configuration.rgname
   resource-group-location = module.configuration.location
   service-plan-id         = module.service-plan.id
@@ -96,7 +96,7 @@ module "webapp" {
 module "webapi" {
   source = "./modules/webapi"
 
-  webapp-name             = "ase-${module.configuration.project-name}-api-${module.configuration.environment}"
+  webapp-name             = "ase-api-${module.configuration.project-name}-${module.configuration.environment}"
   resource-group-name     = module.configuration.rgname
   resource-group-location = module.configuration.location
   service-plan-id         = module.service-plan.id
