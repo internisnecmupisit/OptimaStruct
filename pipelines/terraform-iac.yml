@@ -25,7 +25,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        $Folder = '$(Build.ArtifactStagingDirectory)'
+        $Folder = '$(Build.ArtifactStagingDirectory)/terraform'
         $artifactExists = Test-Path -Path $Folder
         if ($artifactExists) {
             Write-Host "Artifact exists."
