@@ -1,7 +1,7 @@
 trigger: none
 
 variables:
-- group: terraform-codingversus-prod
+- group: terraform-__pname__-__env__
 - name: $saterraform
   value: '$(saterraform)'
 - name: $projectname
