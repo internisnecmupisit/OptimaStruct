@@ -1,12 +1,7 @@
 trigger: none
 
-resources:
-  pipelines:
-  - pipeline: terraform-setup
-    source: terraform-setup
-
 variables:
-- group: terraform-$(projectname)-$(environment)
+- group: terraform-codingversus-prod
 - name: $saterraform
   value: '$(saterraform)'
 - name: $projectname
