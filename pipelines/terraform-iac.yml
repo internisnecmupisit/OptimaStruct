@@ -6,7 +6,7 @@ resources:
     source: terraform-setup
 
 variables:
-- group: terraform
+- group: terraform-$(projectname)-$(environment)
 - name: $saterraform
   value: '$(saterraform)'
 - name: $projectname
