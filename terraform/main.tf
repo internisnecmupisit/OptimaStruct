@@ -14,8 +14,8 @@ provider "azurerm" {
 module "configuration" {
   source = "./configuration"
 
-  project-name = __projectname__
-  environment = __environment__
+  project-name = "__projectname__"
+  environment = "__environment__"
   rgname = "__rgterraform__"
 }
 
