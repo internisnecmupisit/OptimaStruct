@@ -1,5 +1,5 @@
 variables:
-- group: terraform-__pname__-__env__
+- group: terraform-codingversus-prod
 - name: $projectname
   value: '$(projectname)'
 - name: $environment
@@ -10,7 +10,7 @@ variables:
 trigger:
   branches:
     include:
-      - __branchName__
+      - cv-prod
   paths:
     include:
       - terraform/*
