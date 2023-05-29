@@ -27,6 +27,7 @@ module "vnet" {
   resource-group-location = module.configuration.location
   address-space           = "10.0.0.0/16"
 }
+# 1
 
 module "asn-public" {
   source = "./modules/subnet-public"
