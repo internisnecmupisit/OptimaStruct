@@ -56,7 +56,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        $rgterraform = "rg-"+$(projectname)+"-"+$(environment)
+        $rgterraform = "rg-"+"$(projectname)"+"-"+"$(environment)"
 
         Write-Host "##vso[task.setvariable variable=rgterraform]$rgterraform"
   - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
