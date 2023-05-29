@@ -1,0 +1,66 @@
+trigger: none
+
+variables:
+- group: terraform-__pname__-__env__
+- name: $saterraform
+  value: '$(saterraform)'
+- name: $projectname
+  value: $(projectname)
+- name: $environment
+  value: $(environment)
+
+jobs:
+- job: Job_1
+  displayName: Agent job 1
+  pool:
+    vmImage: windows-latest
+  steps:
+  - task: PowerShell@2
+    displayName: 'Check Pipeline Terraform Artifact'
+    inputs:
+      targetType: 'inline'
+      script: |
+        $Folder = '$(Build.ArtifactStagingDirectory)/terraform'
+        $artifactExists = Test-Path -Path $Folder
+        if ($artifactExists) {
+            Write-Host "Artifact exists."
+            Write-Host "##vso[task.setvariable variable=ArtifactExists]true"
+        } else {
+            Write-Host "Artifact does not exist."
+            Write-Host "##vso[task.setvariable variable=ArtifactExists]false"
+        }
+  - task: DownloadPipelineArtifact@2
+    displayName: Download Terraform config Artifact
+    condition: eq(variables['ArtifactExists'], true)
+    continueOnError: true
+    inputs:
+      source: specific
+      project: '$(System.TeamProject)'
+      pipeline: 'terraform-iac-$(projectname)-$(environment)'
+      preferTriggeringPipeline: true
+      artifact: terraform
+      path: $(Pipeline.Workspace)/terraform
+      allowPartiallySucceededBuilds: true
+      allowFailedBuilds: true
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
+    displayName: Install Terraform latest
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)/terraform
+      terraformVersion: 'latest'
+  - task: TerraformTaskV4@4
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      workingDirectory: $(Pipeline.Workspace)/terraform
+      backendServiceArm: 'sc-terraform'
+      backendAzureRmResourceGroupName: '$(rgterraform)'
+      backendAzureRmStorageAccountName: '$(saterraform)'
+      backendAzureRmContainerName: 'terraform'
+      backendAzureRmKey: 'terraform.tfstate'
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV4@4
+    displayName: 'Terraform : azurerm destroy'
+    inputs:
+      command: destroy
+      environmentServiceNameAzureRM: 'sc-terraform'
+      backendServiceArm: 'sc-terraform'
+      workingDirectory: $(Pipeline.Workspace)/terraform
