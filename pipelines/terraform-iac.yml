@@ -41,7 +41,7 @@ jobs:
     inputs:
       source: specific
       project: '$(System.TeamProject)'
-      pipeline: 'terraform-iac'
+      pipeline: 'terraform-iac-$(projectname)-$(environment)'
       preferTriggeringPipeline: true
       artifact: terraform
       path: $(Pipeline.Workspace)/terraform
@@ -52,7 +52,7 @@ jobs:
     inputs:
       source: specific
       project: '$(System.TeamProject)'
-      pipeline: 'terraform-setup'
+      pipeline: 'terraform-setup-$(projectname)-$(environment)'
       preferTriggeringPipeline: true
       artifact: terraform
       path: $(Pipeline.Workspace)/terraform

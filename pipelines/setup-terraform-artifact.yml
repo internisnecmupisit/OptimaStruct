@@ -10,16 +10,10 @@ variables:
 trigger:
   branches:
     include:
-      - cv-stg
+      - cv-prod
   paths:
     include:
       - terraform/*
-
-# resources:
-#   repositories:
-#   - repository: self
-#     type: git
-#     ref: refs/heads/main
 
 jobs:
   - job: build
