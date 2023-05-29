@@ -15,23 +15,8 @@ jobs:
   pool:
     vmImage: windows-latest
   steps:
-  - task: PowerShell@2
-    displayName: 'Check Pipeline Terraform Artifact'
-    inputs:
-      targetType: 'inline'
-      script: |
-        $Folder = '$(Build.ArtifactStagingDirectory)/terraform'
-        $artifactExists = Test-Path -Path $Folder
-        if ($artifactExists) {
-            Write-Host "Artifact exists."
-            Write-Host "##vso[task.setvariable variable=ArtifactExists]true"
-        } else {
-            Write-Host "Artifact does not exist."
-            Write-Host "##vso[task.setvariable variable=ArtifactExists]false"
-        }
   - task: DownloadPipelineArtifact@2
     displayName: Download Terraform config Artifact
-    condition: eq(variables['ArtifactExists'], true)
     continueOnError: true
     inputs:
       source: specific
